@@ -6,7 +6,7 @@
 #' @return calculated log likelihood.
 #' @examples
 #' log_zip_lkh(c(rep(0, 5), rpois(10, 1)), 0.2, 1)
-
+#' 
 log_zip_lkh <- function(y_input, pi_input, lambda_input) {
   y_0 <- y_input[y_input == 0]
   y_not_0 <- y_input[y_input != 0]
