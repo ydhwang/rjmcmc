@@ -1,9 +1,13 @@
 #' zero-inflated Poisson likelihood
 #' 
+#' calculating the log likelihood of zip used in rjmcmc
+#' 
 #' @param y_input observation vector
 #' @param pi_input zero-probability
 #' @param lambda_input poisson intensity
-#' @return calculated log likelihood.
+#' 
+#' @return calculated log likelihood (scalar)
+#' 
 #' @examples
 #' log_zip_lkh(c(rep(0, 5), rpois(10, 1)), 0.2, 1)
 #' 
@@ -19,13 +23,13 @@ log_zip_lkh <- function(y_input, pi_input, lambda_input) {
   return(log_lkh)
 }
 
-
+#' @export
 kernel_ftn <- function(t_input, l_input, g_input) {
   K <- exp(-(outer(t_input, t_input, FUN = "-")^2)/l_input) + g_input * diag(length(t_input))
   return(K)
 }  # covariance matrix = sigma^2 * kernel_ftn(t,l,g)
 
-
+#' @export
 log_mvn_lkh <- function(y_input, t_input, mu_input, sigma2_input, l_input, g_input) {
   d <- length(y_input)
   k_t_t_prime <- kernel_ftn(t_input, l_input, g_input)
@@ -33,6 +37,7 @@ log_mvn_lkh <- function(y_input, t_input, mu_input, sigma2_input, l_input, g_inp
   return(log_lkh)
 }
 
+#' @export
 sum_log_mvn_lkh <- function(y_input, t_input, mu_input, sigma2_input, l_input, g_input, active_input, rest_input, n_active_input) {
   
   sum <- 0
@@ -52,7 +57,7 @@ sum_log_mvn_lkh <- function(y_input, t_input, mu_input, sigma2_input, l_input, g
   
 }
 
-
+#' @export
 acc.birth.ar <- function(y_input, t_input, mvn_inputs, zip_inputs, p_birth_input, p_death_input, active_input, rest_input, n_active_input, n_rest_input) {
   L <- t_input[length(t_input)] + 0.5
   accept <- 0
@@ -134,6 +139,7 @@ acc.birth.ar <- function(y_input, t_input, mvn_inputs, zip_inputs, p_birth_input
   return(list(active = active, rest = rest, n_active = n_active, n_rest = n_rest))
 }
 
+#' @export
 acc.birth.ra <- function(y_input, t_input, mvn_inputs, zip_inputs, p_birth_input, p_death_input, active_input, rest_input, n_active_input, n_rest_input) {
   
   accept <- 0
@@ -211,7 +217,7 @@ acc.birth.ra <- function(y_input, t_input, mvn_inputs, zip_inputs, p_birth_input
   return(list(active = active, rest = rest, n_active = n_active, n_rest = n_rest))
 }
 
-
+#' @export
 acc.death.ar <- function(y_input, t_input, mvn_inputs, zip_inputs, p_birth_input, p_death_input, active_input, rest_input, n_active_input, n_rest_input) {
   
   a_len <- length(active_input)
@@ -285,6 +291,7 @@ acc.death.ar <- function(y_input, t_input, mvn_inputs, zip_inputs, p_birth_input
   return(list(active = active, rest = rest, n_active = n_active, n_rest = n_rest))
 }
 
+#' @export
 acc.death.ra <- function(y_input, t_input, mvn_inputs, zip_inputs, p_birth_input, p_death_input, active_input, rest_input, n_active_input, n_rest_input) {
   L <- t_input[length(t_input)] + 0.5
   accept <- 0
@@ -341,7 +348,7 @@ acc.death.ra <- function(y_input, t_input, mvn_inputs, zip_inputs, p_birth_input
   return(list(active = active, rest = rest, n_active = n_active, n_rest = n_rest))
 }
 
-
+#' @export
 prob_return_birth <- function(active_input, rest_input, n_active_input, n_rest_input) {
   
   
@@ -365,7 +372,7 @@ prob_return_birth <- function(active_input, rest_input, n_active_input, n_rest_i
 }
 
 
-
+#' @export
 prob_return_death <- function(active_input, rest_input, n_active_input, n_rest_input) {
   
   
