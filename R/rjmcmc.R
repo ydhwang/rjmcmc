@@ -24,6 +24,21 @@ log_zip_lkh <- function(y_input, pi_input, lambda_input) {
   return(log_lkh)
 }
 
+
+#' kernel function for something something
+#' 
+#' calculating the gaussian  kernel  used in rjmcmc
+#' 
+#' @param t_input time vector
+#' @param l_input range parameter
+#' @param g_input nugget
+#' 
+#' @return calculated kernel matrix length(t_input) x length(t_input) 
+#' 
+#' 
+#' @export
+#' 
+
 #' @export
 kernel_ftn <- function(t_input, l_input, g_input) {
   K <- exp(-(outer(t_input, t_input, FUN = "-")^2)/l_input) + g_input * diag(length(t_input))
